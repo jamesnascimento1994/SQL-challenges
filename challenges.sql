@@ -34,3 +34,36 @@ FROM people AS p
 LEFT JOIN toys AS t
 ON p.id = t.people_id
 GROUP BY p.id, p.name;
+
+-- Challenge Five: For this challenge you need to create a simple SELECT statement that will return all columns from the people table, and join to the sales table so that you can return the COUNT of all sales and RANK each person by their sale_count.
+-- Challenge Source: https://www.codewars.com/kata/58094559c47d323ebd000035
+
+SELECT
+  p.id,
+  p.name,
+  COUNT(s.sale) AS sale_count,
+  RANK() OVER (PARTITION BY p.id ORDER BY p.id DESC) AS sale_rank
+FROM people p
+INNER JOIN sales s
+ON p.id = s.people_id
+GROUP BY p.id;
+
+-- Challenge Six: You have access to two tables named top_half and bottom_half, as follows... (Rest of description is in source link)
+-- Challenge Source: https://www.codewars.com/kata/593ef0e98b90525e090000b9
+
+SELECT
+  t.id AS id,
+  t.heads AS heads,
+  t.arms AS arms,
+  b.legs AS legs,
+  b.tails AS tails,
+CASE
+  WHEN (heads > arms)
+  THEN 'BEAST'
+  WHEN (tails > legs)
+  THEN 'BEAST'
+  ELSE 'WEIRDO'
+END AS species
+FROM top_half AS t, bottom_half AS b
+WHERE t.id = b.id
+ORDER BY species;
